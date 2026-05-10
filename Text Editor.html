@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Undo/Redo Text Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #111;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 700px;
+            background: #1c1c1c;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: gold;
+            font-size: 32px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 220px;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 16px;
+            background: #2a2a2a;
+            color: white;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .save {
+            background: gold;
+            color: black;
+        }
+
+        .undo {
+            background: #ffffff;
+            color: black;
+        }
+
+        .redo {
+            background: #444;
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .info {
+            margin-top: 20px;
+            text-align: center;
+            color: #ccc;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Undo / Redo Text Editor</h1>
+
+        <textarea id="editor" placeholder="Start typing here..."></textarea>
+
+        <div class="buttons">
+            <button class="save" onclick="saveState()">Save State</button>
+            <button class="undo" onclick="undoAction()">Undo</button>
+            <button class="redo" onclick="redoAction()">Redo</button>
+        </div>
+
+        <div class="info">
+            DSA Project using Stack Concept
+        </div>
+    </div>
+
+    <script>
+        let undoStack = [];
+        let redoStack = [];
+
+        const editor = document.getElementById("editor");
+
+        function saveState() {
+            undoStack.push(editor.value);
+            redoStack = [];
+        }
+
+        function undoAction() {
+            if (undoStack.length > 0) {
+                redoStack.push(editor.value);
+                editor.value = undoStack.pop();
+            } else {
+                alert("Nothing to Undo");
+            }
+        }
+
+        function redoAction() {
+            if (redoStack.length > 0) {
+                undoStack.push(editor.value);
+                editor.value = redoStack.pop();
+            } else {
+                alert("Nothing to Redo");
+            }
+        }
+    </script>
+</body>
+<!--
+
+ALGORITHM
+
+1. Start
+2. Initialize empty undoStack and redoStack
+3. Take input text from user
+4. When user clicks Save State:
+   - Push current text into undoStack
+   - Clear redoStack
+5. When user clicks Undo:
+   - If undoStack is not empty:
+       - Push current text into redoStack
+       - Restore top value from undoStack
+       - Pop undoStack
+   - Else display "Nothing to Undo"
+6. When user clicks Redo:
+   - If redoStack is not empty:
+       - Push current text into undoStack
+       - Restore top value from redoStack
+       - Pop redoStack
+   - Else display "Nothing to Redo"
+7. Stop
+
+PSEUDOCODE
+
+BEGIN
+
+DECLARE undoStack
+DECLARE redoStack
+DECLARE text
+
+FUNCTION SaveState()
+    PUSH text INTO undoStack
+    CLEAR redoStack
+END FUNCTION
+
+FUNCTION Undo()
+    IF undoStack is not empty THEN
+        PUSH text INTO redoStack
+        text = TOP of undoStack
+        POP undoStack
+    ELSE
+        DISPLAY "Nothing to Undo"
+    END IF
+END FUNCTION
+
+FUNCTION Redo()
+    IF redoStack is not empty THEN
+        PUSH text INTO undoStack
+        text = TOP of redoStack
+        POP redoStack
+    ELSE
+        DISPLAY "Nothing to Redo"
+    END IF
+END FUNCTION
+
+END
+
+FLOWCHART
+
+Start
+  ↓
+Initialize undoStack and redoStack
+  ↓
+Enter Text
+  ↓
+Save State?
+  ↓ Yes
+Push current text to undoStack
+Clear redoStack
+  ↓
+Undo Requested?
+  ↓ Yes
+undoStack empty?
+  ↓ No
+Push current text to redoStack
+Restore previous text
+Pop undoStack
+  ↓
+Redo Requested?
+  ↓ Yes
+redoStack empty?
+  ↓ No
+Push current text to undoStack
+Restore redo text
+Pop redoStack
+  ↓
+Stop
+
+-->
+
+</html>
